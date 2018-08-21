@@ -1,7 +1,7 @@
 package com.bill.viewinjector;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.bill.annotation.BindView;
@@ -16,7 +16,6 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-//        Main2Activity$ViewInjector injector = new Main2Activity$ViewInjector(this);
         ViewInjector.bind(this);
 
         nameTv.setText("Main2");
