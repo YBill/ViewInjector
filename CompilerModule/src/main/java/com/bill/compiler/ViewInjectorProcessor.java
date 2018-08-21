@@ -83,7 +83,7 @@ public class ViewInjectorProcessor extends AbstractProcessor {
     private void generateCode() {
         for (TypeElement typeElement : map.keySet()) {
             MethodSpec.Builder methodBuilder = MethodSpec.constructorBuilder()
-                    .addModifiers(Modifier.PRIVATE)
+                    .addModifiers(Modifier.PUBLIC)
                     .addParameter(ClassName.get(typeElement.asType()), "activity");
 
             List<VariableElement> variableElementList = map.get(typeElement);
