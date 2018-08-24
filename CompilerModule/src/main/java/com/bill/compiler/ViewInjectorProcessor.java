@@ -84,7 +84,8 @@ public class ViewInjectorProcessor extends AbstractProcessor {
         for (TypeElement typeElement : map.keySet()) {
             MethodSpec.Builder methodBuilder = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PUBLIC)
-                    .addParameter(ClassName.get(typeElement.asType()), "activity");
+                    .addParameter(ClassName.get(typeElement.asType()), "target")
+                    .addParameter(ClassName.get("android.view", "View"), "view");
 
             List<VariableElement> variableElementList = map.get(typeElement);
             for (VariableElement variableElement : variableElementList) {
@@ -92,11 +93,12 @@ public class ViewInjectorProcessor extends AbstractProcessor {
                 String varType = variableElement.asType().toString();
                 BindView bindView = variableElement.getAnnotation(BindView.class);
                 int params = bindView.value();
-                methodBuilder.addStatement("activity.$L = ($L) activity.findViewById($L)", varName, varType, params);
+                methodBuilder.addStatement("target.$L = ($L) view.findViewById($L)", varName, varType, params);
             }
 
             final String pkgName = getPackageName(typeElement);
-            final String clsName = typeElement.getSimpleName().toString() + "$ViewInjector";
+//            final String clsName = typeElement.getSimpleName().toString() + "$ViewInjector";
+            final String clsName = getClassName(typeElement, pkgName) + "$ViewInjector";
 
             TypeSpec typeSpec = TypeSpec.classBuilder(clsName)
                     .addModifiers(Modifier.PUBLIC)
@@ -112,6 +114,11 @@ public class ViewInjectorProcessor extends AbstractProcessor {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getClassName(TypeElement type, String pkgName) {
+        int packageLength = pkgName.length() + 1;
+        return type.getQualifiedName().toString().substring(packageLength).replace('.', '$');
     }
 
     private String getPackageName(TypeElement type) {
